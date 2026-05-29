@@ -1,22 +1,27 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
 
-import API from '../api/axios';
+import { useNavigate, Link } from "react-router-dom";
+
+import API from "../api/axios";
 
 function Login() {
 
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    email:'',
-    password:''
-  });
+  const [formData, setFormData] =
+    useState({
+      email: "",
+      password: "",
+    });
 
   const handleChange = (e) => {
 
     setFormData({
+
       ...formData,
-      [e.target.name]: e.target.value
+
+      [e.target.name]:
+        e.target.value,
     });
   };
 
@@ -26,71 +31,165 @@ function Login() {
 
     try {
 
-      const res = await API.post(
-        '/auth/login',
-        formData
-      );
+      const res =
+        await API.post(
+          "/auth/login",
+          formData
+        );
 
       localStorage.setItem(
-        'token',
+        "token",
         res.data.token
       );
 
       localStorage.setItem(
-        'user',
-        JSON.stringify(res.data.user)
+        "user",
+
+        JSON.stringify(
+          res.data.user
+        )
       );
 
-      alert('Login successful');
+      alert(
+        "Login successful"
+      );
 
-      navigate('/');
+      navigate("/");
 
     } catch (err) {
 
       alert(
-        err.response?.data?.message ||
-        'Login failed'
+
+        err.response?.data
+          ?.message ||
+
+        "Login failed"
       );
     }
   };
 
   return (
 
-    <div style={styles.container}>
+    <div style={styles.page}>
 
-      <form
-        onSubmit={handleSubmit}
-        style={styles.form}
-      >
+      {/* LEFT SECTION */}
+      <div style={styles.leftSection}>
 
-        <h2>Login</h2>
+        <div style={styles.overlay}></div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-          style={styles.input}
-        />
+        <div style={styles.leftContent}>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-          style={styles.input}
-        />
+          <h1 style={styles.brand}>
+            UrbanNest
+          </h1>
 
-        <button
-          type="submit"
-          style={styles.button}
+          <h2 style={styles.title}>
+            Welcome Back
+          </h2>
+
+          <p style={styles.text}>
+
+            Discover premium
+            properties and manage
+            your real estate journey
+            with confidence.
+
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* RIGHT SECTION */}
+      <div style={styles.rightSection}>
+
+        <form
+          onSubmit={handleSubmit}
+          style={styles.form}
         >
-          Login
-        </button>
 
-      </form>
+          <h2 style={styles.formTitle}>
+            Login to Your Account
+          </h2>
+
+          <p style={styles.formSubtitle}>
+            Continue your journey
+            with UrbanNest
+          </p>
+
+          {/* EMAIL */}
+          <div style={styles.inputGroup}>
+
+            <label style={styles.label}>
+              Email Address
+            </label>
+
+            <input
+              type="email"
+
+              name="email"
+
+              placeholder="Enter your email"
+
+              onChange={handleChange}
+
+              required
+
+              style={styles.input}
+            />
+
+          </div>
+
+          {/* PASSWORD */}
+          <div style={styles.inputGroup}>
+
+            <label style={styles.label}>
+              Password
+            </label>
+
+            <input
+              type="password"
+
+              name="password"
+
+              placeholder="Enter your password"
+
+              onChange={handleChange}
+
+              required
+
+              style={styles.input}
+            />
+
+          </div>
+
+          {/* BUTTON */}
+          <button
+            type="submit"
+
+            style={styles.button}
+          >
+            Login →
+          </button>
+
+          {/* REGISTER */}
+          <p style={styles.bottomText}>
+
+            Don't have an account?
+
+            <Link
+              to="/register"
+
+              style={styles.link}
+            >
+              Register
+            </Link>
+
+          </p>
+
+        </form>
+
+      </div>
 
     </div>
   );
@@ -98,44 +197,227 @@ function Login() {
 
 const styles = {
 
-  container: {
-    display:'flex',
-    justifyContent:'center',
-    alignItems:'center',
-    minHeight:'100vh',
-    padding:'1rem'
+  page: {
+
+    display: "grid",
+
+    gridTemplateColumns:
+      window.innerWidth <= 968
+        ? "1fr"
+        : "1fr 1fr",
+
+    minHeight: "100vh",
+  },
+
+  /* LEFT */
+
+  leftSection: {
+
+    position: "relative",
+
+    backgroundImage:
+      "url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop')",
+
+    backgroundSize: "cover",
+
+    backgroundPosition: "center",
+
+    display:
+      window.innerWidth <= 968
+        ? "none"
+        : "flex",
+
+    alignItems: "center",
+
+    justifyContent: "center",
+
+    padding: "3rem",
+  },
+
+  overlay: {
+
+    position: "absolute",
+
+    inset: 0,
+
+    background:
+      "rgba(15,23,42,0.78)",
+  },
+
+  leftContent: {
+
+    position: "relative",
+
+    zIndex: 2,
+
+    color: "white",
+
+    maxWidth: "500px",
+  },
+
+  brand: {
+
+    fontSize: "4rem",
+
+    color: "white",
+
+    marginBottom: "1rem",
+  },
+
+  title: {
+
+    fontSize: "3rem",
+
+    color: "white",
+
+    marginBottom: "1rem",
+  },
+
+  text: {
+
+    fontSize: "1.1rem",
+
+    lineHeight: "1.8",
+
+    color:
+      "rgba(255,255,255,0.85)",
+  },
+
+  /* RIGHT */
+
+  rightSection: {
+
+    display: "flex",
+
+    justifyContent: "center",
+
+    alignItems: "center",
+
+    background: "#f8fafc",
+
+    padding: "2rem",
   },
 
   form: {
-    width:'100%',
-    maxWidth:'450px',
-    display:'flex',
-    flexDirection:'column',
-    gap:'1rem',
+
+    width: "100%",
+
+    maxWidth: "500px",
+
+    background:
+      "rgba(255,255,255,0.8)",
+
+    backdropFilter:
+      "blur(16px)",
+
+    border:
+      "1px solid rgba(255,255,255,0.3)",
+
     padding:
       window.innerWidth <= 768
-        ? '1rem'
-        : '2rem',
+        ? "2rem"
+        : "3rem",
 
-    border:'1px solid #ccc',
-    borderRadius:'10px',
-    background:'white'
+    borderRadius: "28px",
+
+    boxShadow:
+      "0 20px 40px rgba(0,0,0,0.08)",
+  },
+
+  formTitle: {
+
+    fontSize: "2rem",
+
+    marginBottom: "0.5rem",
+
+    color: "#0f172a",
+  },
+
+  formSubtitle: {
+
+    color: "#64748b",
+
+    marginBottom: "2rem",
+  },
+
+  inputGroup: {
+
+    marginBottom: "1.5rem",
+  },
+
+  label: {
+
+    display: "block",
+
+    marginBottom: "0.6rem",
+
+    fontWeight: "600",
+
+    color: "#334155",
   },
 
   input: {
-    padding:'0.8rem',
-    borderRadius:'5px',
-    border:'1px solid #ccc'
+
+    width: "100%",
+
+    padding: "1rem",
+
+    borderRadius: "14px",
+
+    border:
+      "1px solid #dbeafe",
+
+    fontSize: "1rem",
+
+    background: "white",
   },
 
   button: {
-    padding:'0.8rem',
-    background:'#1a1a2e',
-    color:'white',
-    border:'none',
-    borderRadius:'5px',
-    cursor:'pointer'
-  }
+
+    width: "100%",
+
+    padding: "1rem",
+
+    border: "none",
+
+    borderRadius: "14px",
+
+    background:
+      "linear-gradient(135deg, #0f172a, #1e293b)",
+
+    color: "white",
+
+    fontWeight: "700",
+
+    fontSize: "1rem",
+
+    marginTop: "0.5rem",
+
+    cursor: "pointer",
+
+    boxShadow:
+      "0 10px 25px rgba(15,23,42,0.2)",
+  },
+
+  bottomText: {
+
+    marginTop: "1.5rem",
+
+    textAlign: "center",
+
+    color: "#64748b",
+  },
+
+  link: {
+
+    marginLeft: "0.4rem",
+
+    color: "#eab308",
+
+    fontWeight: "700",
+
+    textDecoration: "none",
+  },
 };
 
 export default Login;

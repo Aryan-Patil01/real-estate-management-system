@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const pool = require('../db');
-const { verifyAgentOrAdmin } = require('../middleware/auth.middleware');
 
-// STORAGE CONFIG
+const multer = require('multer');
+
+const pool = require('../db');
+
 const storage = multer.diskStorage({
+
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
   },
@@ -14,42 +14,47 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      Date.now() + path.extname(file.originalname)
+      Date.now() + '-' + file.originalname
     );
   }
 });
 
 const upload = multer({ storage });
 
-// UPLOAD PROPERTY IMAGE
 router.post(
-  '/',
-  verifyAgentOrAdmin,
-  upload.single('image'),
-  async (req, res) => {
+  '/:propertyId',
 
-    const { property_id } = req.body;
+  upload.array('images', 10),
+
+  async (req, res) => {
 
     try {
 
-      const imageUrl = `/uploads/${req.file.filename}`;
+      const { propertyId } = req.params;
 
-      await pool.query(
-        `INSERT INTO property_images
-        (property_id, image_url)
-        VALUES (?, ?)`,
-        [property_id, imageUrl]
-      );
+      for (const file of req.files) {
 
-      res.status(201).json({
-        message: 'Image uploaded successfully.',
-        imageUrl
+        const imageUrl =
+          `/uploads/${file.filename}`;
+
+        await pool.query(
+          `INSERT INTO property_images
+           (property_id, image_url)
+           VALUES (?, ?)`,
+          [propertyId, imageUrl]
+        );
+      }
+
+      res.json({
+        message: 'Images uploaded successfully'
       });
 
     } catch (err) {
+
+      console.log(err);
+
       res.status(500).json({
-        message: 'Server error.',
-        error: err.message
+        message: 'Upload failed'
       });
     }
   }

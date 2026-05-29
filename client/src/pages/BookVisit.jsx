@@ -15,12 +15,16 @@ function BookVisit() {
 
       const token = localStorage.getItem('token');
 
+      // Combine date + time into a single datetime string (e.g. "2025-06-10T14:30")
+      const visitDateTime = visitDate && visitTime
+        ? `${visitDate}T${visitTime}:00`
+        : visitDate;
+
       await API.post(
         '/bookings',
         {
           property_id: propertyId,
-          visit_date: visitDate,
-          visit_time: visitTime
+          visit_date: visitDateTime
         },
         {
           headers: {

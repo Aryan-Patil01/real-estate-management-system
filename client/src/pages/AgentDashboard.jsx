@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 
 import API from "../api/axios";
 
-function AdminDashboard() {
+function AgentDashboard() {
 
   const [properties, setProperties] =
     useState([]);
 
   const [bookings, setBookings] =
     useState([]);
+
+  const user =
+    JSON.parse(
+      localStorage.getItem("user")
+    ) || {};
 
   useEffect(() => {
 
@@ -27,7 +32,16 @@ function AdminDashboard() {
       const res =
         await API.get("/properties");
 
-      setProperties(res.data);
+      const ownProperties =
+        res.data.filter(
+          (property) =>
+            property.agent_id ===
+            user.id
+        );
+
+      setProperties(
+        ownProperties
+      );
 
     } catch (err) {
 
@@ -44,7 +58,16 @@ function AdminDashboard() {
       const res =
         await API.get("/bookings");
 
-      setBookings(res.data);
+      const ownBookings =
+        res.data.filter(
+          (booking) =>
+            booking.agent_id ===
+            user.id
+        );
+
+      setBookings(
+        ownBookings
+      );
 
     } catch (err) {
 
@@ -97,13 +120,13 @@ function AdminDashboard() {
         <div style={styles.heroContent}>
 
           <h1 style={styles.heroTitle}>
-            Admin Dashboard
+            Agent Dashboard
           </h1>
 
           <p style={styles.heroText}>
-            Manage properties,
-            bookings, and platform
-            activities efficiently.
+            Manage your properties
+            and monitor customer
+            visit bookings easily.
           </p>
 
         </div>
@@ -123,7 +146,7 @@ function AdminDashboard() {
             </h2>
 
             <p style={styles.statLabel}>
-              Total Properties
+              My Properties
             </p>
 
           </div>
@@ -135,7 +158,7 @@ function AdminDashboard() {
             </h2>
 
             <p style={styles.statLabel}>
-              Total Bookings
+              Visit Bookings
             </p>
 
           </div>
@@ -160,29 +183,13 @@ function AdminDashboard() {
 
         </div>
 
-        {/* ADD BUTTON */}
-        <div style={styles.buttonWrapper}>
-
-          <button
-            style={styles.addBtn}
-
-            onClick={() =>
-              window.location.href =
-                "/add-property"
-            }
-          >
-            ➕ Add New Property
-          </button>
-
-        </div>
-
         {/* PROPERTIES */}
         <section style={styles.section}>
 
           <div style={styles.sectionHeader}>
 
             <h2 style={styles.sectionTitle}>
-              All Properties
+              My Properties
             </h2>
 
           </div>
@@ -317,7 +324,7 @@ function AdminDashboard() {
           <div style={styles.sectionHeader}>
 
             <h2 style={styles.sectionTitle}>
-              Visit Bookings
+              Property Visit Bookings
             </h2>
 
           </div>
@@ -340,10 +347,6 @@ function AdminDashboard() {
 
                   <th style={styles.th}>
                     Visitor
-                  </th>
-
-                  <th style={styles.th}>
-                    Agent ID
                   </th>
 
                   <th style={styles.th}>
@@ -370,17 +373,21 @@ function AdminDashboard() {
                       </td>
 
                       <td style={styles.td}>
+
                         <strong>
                           {
                             booking.property_name
                           }
                         </strong>
+
                         <br />
+
                         ID:
                         {" "}
                         {
                           booking.property_id
                         }
+
                       </td>
 
                       <td style={styles.td}>
@@ -389,12 +396,6 @@ function AdminDashboard() {
                         </strong>
                         <br />
                         {booking.user_email}
-                      </td>
-
-                      <td style={styles.td}>
-                        {
-                          booking.agent_id
-                        }
                       </td>
 
                       <td style={styles.td}>
@@ -599,36 +600,6 @@ const styles = {
     fontWeight: "600",
   },
 
-  buttonWrapper: {
-
-    textAlign: "center",
-
-    marginBottom: "3rem",
-  },
-
-  addBtn: {
-
-    background:
-      "linear-gradient(135deg, #eab308, #ca8a04)",
-
-    color: "white",
-
-    border: "none",
-
-    padding: "1rem 2rem",
-
-    borderRadius: "14px",
-
-    fontWeight: "700",
-
-    fontSize: "1rem",
-
-    cursor: "pointer",
-
-    boxShadow:
-      "0 12px 30px rgba(234,179,8,0.3)",
-  },
-
   /* SECTION */
 
   section: {
@@ -814,7 +785,7 @@ const styles = {
 
     borderCollapse: "collapse",
 
-    minWidth: "900px",
+    minWidth: "800px",
   },
 
   tableHeader: {
@@ -854,4 +825,4 @@ const styles = {
   },
 };
 
-export default AdminDashboard;
+export default AgentDashboard;

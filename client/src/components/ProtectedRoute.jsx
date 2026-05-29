@@ -1,14 +1,60 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const token = localStorage.getItem('token');
-  const userStr = localStorage.getItem('user');
-  const user = userStr && userStr !== "undefined" ? JSON.parse(userStr) : {};
+function ProtectedRoute({
 
-  if (!token) return <Navigate to="/login" />;
-  if (adminOnly && user.role !== 'admin') return <Navigate to="/" />;
+  children,
+
+  adminOnly = false,
+
+  agentOnly = false,
+
+  agentOrAdmin = false
+
+}) {
+
+  const token =
+    localStorage.getItem("token");
+
+  const user =
+    JSON.parse(
+      localStorage.getItem("user") || "{}"
+    );
+
+  // NOT LOGGED IN
+  if (!token) {
+
+    return <Navigate to="/login" />;
+  }
+
+  // ADMIN ONLY
+  if (
+    adminOnly &&
+    user.role !== "admin"
+  ) {
+
+    return <Navigate to="/" />;
+  }
+
+  // AGENT ONLY
+  if (
+    agentOnly &&
+    user.role !== "agent"
+  ) {
+
+    return <Navigate to="/" />;
+  }
+
+  // ADMIN OR AGENT
+  if (
+    agentOrAdmin &&
+    user.role !== "admin" &&
+    user.role !== "agent"
+  ) {
+
+    return <Navigate to="/" />;
+  }
 
   return children;
-};
+}
 
 export default ProtectedRoute;

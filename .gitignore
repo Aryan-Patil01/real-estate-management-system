@@ -3,3 +3,17 @@ node_modules
 dist
 build
 .vscode
+
+node_modules/
+client/node_modules/
+server/node_modules/
+.env
+server/.env
+client/.env
+server/uploads/
+client/dist/
+client/build/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
