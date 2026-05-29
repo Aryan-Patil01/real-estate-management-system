@@ -8,7 +8,7 @@ function PropertyDetail() {
 
   const { id } = useParams();
 
-  const [property, setProperty] = 
+  const [property, setProperty] =
     useState(null);
 
   const [visitDate, setVisitDate] =
@@ -63,8 +63,10 @@ function PropertyDetail() {
     property.images.length > 0
   ) {
 
-    image =
-      `http://localhost:5000${property.images[0].image_url}`;
+    const url = property.images[0].image_url;
+    image = url.startsWith('http')
+      ? url
+      : `http://localhost:5000${url}`;
 
   } else if (property.image) {
 

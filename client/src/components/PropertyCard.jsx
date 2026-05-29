@@ -4,10 +4,12 @@ function PropertyCard({ property }) {
 
   const navigate = useNavigate();
 
-  const image =
-    property.images?.[0]?.image_url
-      ? `http://localhost:5000${property.images[0].image_url}`
-      : "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1200&auto=format&fit=crop";
+  const rawUrl = property.images?.[0]?.image_url;
+  const image = rawUrl
+    ? rawUrl.startsWith("http")
+      ? rawUrl
+      : `http://localhost:5000${rawUrl}`
+    : "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1200&auto=format&fit=crop";
 
   return (
 
